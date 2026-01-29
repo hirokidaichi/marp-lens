@@ -1,0 +1,43 @@
+{
+  "name": "marpkit",
+  "version": "1.0.0",
+  "description": "Vector-based semantic search CLI for Marp presentations",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "marpkit": "dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/cli.ts",
+    "search": "tsx src/cli.ts search",
+    "index": "tsx src/cli.ts index",
+    "stats": "tsx src/cli.ts stats",
+    "get": "tsx src/cli.ts get",
+    "test": "vitest",
+    "test:e2e": "vitest --config vitest.config.e2e.ts --run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "better-sqlite3": "^11.7.0",
+    "chalk": "^5.4.1",
+    "cli-table3": "^0.6.5",
+    "commander": "^12.1.0",
+    "dotenv": "^16.4.7",
+    "glob": "^11.0.0",
+    "ora": "^8.1.1",
+    "sqlite-vec": "^0.1.6",
+    "yaml": "^2.7.0"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.12",
+    "@types/node": "^22.10.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3",
+    "vitest": "^2.1.8"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
