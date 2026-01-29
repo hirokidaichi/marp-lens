@@ -1,6 +1,6 @@
 {
   "name": "marpkit",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Vector-based semantic search CLI for Marp presentations",
   "type": "module",
   "main": "dist/index.js",
