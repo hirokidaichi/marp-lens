@@ -225,16 +225,15 @@ npm test
 npm run build
 ```
 
-## Claude Code スキル
+## AIエージェント向けスキル
 
-Claude Codeでmarpkitスキルを使用すると、AIがプレゼンテーションを検索・参照できるようになります。
+AIエージェントにmarpkitスキルを追加すると、プレゼンテーションの検索・参照が可能になります。
 
 ```bash
-# スキルを追加
-npx @anthropic-ai/claude-code skills add hirokidaichi/marpkit
+npx skills add hirokidaichi/marpkit
 ```
 
-追加後、Claudeに「スライドを検索して」「プレゼンの内容を教えて」などと指示すると、自動的にmarpkitを使用してスライドを検索します。
+追加後、エージェントに「スライドを検索して」「プレゼンの内容を教えて」などと指示すると、自動的にmarpkitを使用してスライドを検索します。
 
 ## 技術スタック
 
