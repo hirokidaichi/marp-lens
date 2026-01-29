@@ -11,26 +11,26 @@ Vector-based semantic search CLI for Marp presentations.
 
 ```bash
 # Search slides by meaning
-marpkit search "機械学習の基礎" --limit 5
+npx marpkit search "機械学習の基礎" --limit 5
 
 # Get specific slide content
-marpkit get "presentation.md #3"
+npx marpkit get "presentation.md #3"
 
 # View database stats
-marpkit stats
+npx marpkit stats
 
 # Index new/changed files
-marpkit index -d ./slides
+npx marpkit index -d ./slides
 
 # Index with image descriptions
-marpkit index -d ./slides --with-images
+npx marpkit index -d ./slides --with-images
 ```
 
 ## Commands
 
 ### Search
 ```bash
-marpkit search "<query>" [options]
+npx marpkit search "<query>" [options]
 ```
 | Option | Description |
 |--------|-------------|
@@ -40,13 +40,13 @@ marpkit search "<query>" [options]
 
 ### Get Slide
 ```bash
-marpkit get "<file> #<number>"
+npx marpkit get "<file> #<number>"
 ```
 Retrieves full content of a specific slide. Supports partial path matching.
 
 ### Index
 ```bash
-marpkit index [options]
+npx marpkit index [options]
 ```
 | Option | Description |
 |--------|-------------|
@@ -57,15 +57,15 @@ marpkit index [options]
 
 ### Stats
 ```bash
-marpkit stats
+npx marpkit stats
 ```
 Shows file count, slide count, embedding count, and database size.
 
 ## Workflow
 
-1. **Find relevant slides**: `marpkit search "topic"`
-2. **Get full content**: `marpkit get "file.md #N"` for slides of interest
-3. **Re-index if needed**: `marpkit index -d ./slides` after adding files
+1. **Find relevant slides**: `npx marpkit search "topic"`
+2. **Get full content**: `npx marpkit get "file.md #N"` for slides of interest
+3. **Re-index if needed**: `npx marpkit index -d ./slides` after adding files
 
 ## Output Format
 
