@@ -5,7 +5,7 @@ import path from "node:path";
 import os from "node:os";
 
 describe("file-hash utilities", () => {
-  const tempDir = path.join(os.tmpdir(), `marpkit-test-${Date.now()}`);
+  const tempDir = path.join(os.tmpdir(), `marp-lens-test-${Date.now()}`);
   const testFile1 = path.join(tempDir, "test1.md");
   const testFile2 = path.join(tempDir, "test2.md");
 

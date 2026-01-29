@@ -10,7 +10,7 @@ describe("SlideDatabase", () => {
 
   beforeEach(() => {
     // Create a temporary database file
-    dbPath = path.join(os.tmpdir(), `marpkit-test-${Date.now()}.db`);
+    dbPath = path.join(os.tmpdir(), `marp-lens-test-${Date.now()}.db`);
     db = new SlideDatabase(dbPath);
   });
 

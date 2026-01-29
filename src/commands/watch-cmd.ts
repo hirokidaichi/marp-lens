@@ -20,7 +20,7 @@ export async function watchCommand(options: WatchOptions): Promise<void> {
   const db = new SlideDatabase(options.db);
   const gemini = new GeminiClient(apiKey);
 
-  console.log(chalk.cyan.bold("marpkit watch"));
+  console.log(chalk.cyan.bold("marp-lens watch"));
   console.log(chalk.gray("─".repeat(50)));
   console.log(`  Directory: ${chalk.white(path.resolve(options.dir))}`);
   console.log(`  Database:  ${chalk.white(options.db)}`);

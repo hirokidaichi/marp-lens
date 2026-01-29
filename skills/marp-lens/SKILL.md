@@ -1,9 +1,9 @@
 ---
-name: marpkit
+name: marp-lens
 description: Semantic search for Marp presentations using vector embeddings. Use when finding relevant slides by topic, retrieving slide content, or exploring presentation materials. Triggers on "find slides about...", "search presentations for...", "get slide content", "what slides cover...", or any Marp/presentation search query.
 ---
 
-# marpkit
+# marp-lens
 
 Vector-based semantic search CLI for Marp presentations.
 
@@ -11,26 +11,26 @@ Vector-based semantic search CLI for Marp presentations.
 
 ```bash
 # Search slides by meaning
-npx marpkit search "機械学習の基礎" --limit 5
+npx marp-lens search "機械学習の基礎" --limit 5
 
 # Get specific slide content
-npx marpkit get "presentation.md #3"
+npx marp-lens get "presentation.md #3"
 
 # View database stats
-npx marpkit stats
+npx marp-lens stats
 
 # Index new/changed files
-npx marpkit index -d ./slides
+npx marp-lens index -d ./slides
 
 # Index with image descriptions
-npx marpkit index -d ./slides --with-images
+npx marp-lens index -d ./slides --with-images
 ```
 
 ## Commands
 
 ### Search
 ```bash
-npx marpkit search "<query>" [options]
+npx marp-lens search "<query>" [options]
 ```
 | Option | Description |
 |--------|-------------|
@@ -40,13 +40,13 @@ npx marpkit search "<query>" [options]
 
 ### Get Slide
 ```bash
-npx marpkit get "<file> #<number>"
+npx marp-lens get "<file> #<number>"
 ```
 Retrieves full content of a specific slide. Supports partial path matching.
 
 ### Index
 ```bash
-npx marpkit index [options]
+npx marp-lens index [options]
 ```
 | Option | Description |
 |--------|-------------|
@@ -57,15 +57,15 @@ npx marpkit index [options]
 
 ### Stats
 ```bash
-npx marpkit stats
+npx marp-lens stats
 ```
 Shows file count, slide count, embedding count, and database size.
 
 ## Workflow
 
-1. **Find relevant slides**: `npx marpkit search "topic"`
-2. **Get full content**: `npx marpkit get "file.md #N"` for slides of interest
-3. **Re-index if needed**: `npx marpkit index -d ./slides` after adding files
+1. **Find relevant slides**: `npx marp-lens search "topic"`
+2. **Get full content**: `npx marp-lens get "file.md #N"` for slides of interest
+3. **Re-index if needed**: `npx marp-lens index -d ./slides` after adding files
 
 ## Output Format
 

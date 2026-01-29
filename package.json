@@ -1,22 +1,22 @@
 {
-  "name": "marpkit",
+  "name": "marp-lens",
   "version": "1.0.1",
   "description": "Vector-based semantic search CLI for Marp presentations",
   "type": "module",
   "main": "dist/index.js",
   "bin": {
-    "marpkit": "dist/cli.js"
+    "marp-lens": "dist/cli.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hirokidaichi/marpkit.git"
+    "url": "git+https://github.com/hirokidaichi/marp-lens.git"
   },
   "author": "hirokidaichi",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/hirokidaichi/marpkit/issues"
+    "url": "https://github.com/hirokidaichi/marp-lens/issues"
   },
-  "homepage": "https://github.com/hirokidaichi/marpkit#readme",
+  "homepage": "https://github.com/hirokidaichi/marp-lens#readme",
   "keywords": [
     "marp",
     "presentation",

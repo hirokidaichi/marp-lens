@@ -12,12 +12,12 @@ import { watchCommand } from "./commands/watch-cmd.js";
 // Load .env file
 config();
 
-const DEFAULT_DIR = process.env.MARPKIT_DIR || process.cwd();
+const DEFAULT_DIR = process.env.MARP_LENS_DIR || process.cwd();
 const DEFAULT_DB =
-  process.env.MARPKIT_DB || path.resolve(process.cwd(), "marpkit.db");
+  process.env.MARP_LENS_DB || path.resolve(process.cwd(), "marp-lens.db");
 
 program
-  .name("marpkit")
+  .name("marp-lens")
   .description("Vector-based semantic search CLI for Marp presentations")
   .version("1.0.0");
 

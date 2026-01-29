@@ -15,7 +15,7 @@ export function getCommand(
     console.error(
       chalk.red("Error: Invalid format. Use: get <file> #<slide-number>")
     );
-    console.error(chalk.gray("Example: marpkit get slides/aiagent.md #32"));
+    console.error(chalk.gray("Example: marp-lens get slides/aiagent.md #32"));
     process.exit(1);
   }
 

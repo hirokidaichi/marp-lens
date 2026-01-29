@@ -32,7 +32,7 @@ describe("E2E: Index and Search", () => {
     }
 
     // Create temporary database
-    dbPath = path.join(os.tmpdir(), `marpkit-e2e-${Date.now()}.db`);
+    dbPath = path.join(os.tmpdir(), `marp-lens-e2e-${Date.now()}.db`);
     db = new SlideDatabase(dbPath);
     gemini = new GeminiClient(apiKey);
 

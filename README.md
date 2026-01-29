@@ -1,11 +1,11 @@
-# marpkit
+# marp-lens
 
 <p align="center">
-  <img src="img/logo.png" alt="marpkit logo" width="200">
+  <img src="img/logo.png" alt="marp-lens logo" width="200">
 </p>
 
-[![CI](https://github.com/hirokidaichi/marpkit/actions/workflows/ci.yml/badge.svg)](https://github.com/hirokidaichi/marpkit/actions/workflows/ci.yml)
-[![npm version](https://badge.fury.io/js/marpkit.svg)](https://www.npmjs.com/package/marpkit)
+[![CI](https://github.com/hirokidaichi/marp-lens/actions/workflows/ci.yml/badge.svg)](https://github.com/hirokidaichi/marp-lens/actions/workflows/ci.yml)
+[![npm version](https://badge.fury.io/js/marp-lens.svg)](https://www.npmjs.com/package/marp-lens)
 
 Marpプレゼンテーション用のベクトル検索CLIツール。Gemini APIを使用してスライドの意味検索を実現します。
 
@@ -25,22 +25,22 @@ Marpプレゼンテーション用のベクトル検索CLIツール。Gemini API
 インストール不要で直接実行できます：
 
 ```bash
-npx marpkit search "機械学習"
-npx marpkit index -d ./slides
-npx marpkit stats
+npx marp-lens search "機械学習"
+npx marp-lens index -d ./slides
+npx marp-lens stats
 ```
 
 ### グローバルインストール
 
 ```bash
-npm install -g marpkit
+npm install -g marp-lens
 ```
 
 ### ソースからビルド
 
 ```bash
-git clone https://github.com/hirokidaichi/marpkit.git
-cd marpkit
+git clone https://github.com/hirokidaichi/marp-lens.git
+cd marp-lens
 npm install
 npm run build
 ```
@@ -68,51 +68,51 @@ APIキーは[Google AI Studio](https://aistudio.google.com/)で取得できま�
 
 ```bash
 # カレントディレクトリのMarkdownファイルをインデックス
-marpkit index
+marp-lens index
 
 # 特定のディレクトリをインデックス
-marpkit index -d ./slides
+marp-lens index -d ./slides
 
 # 画像説明付きでインデックス
-marpkit index -d ./slides --with-images
+marp-lens index -d ./slides --with-images
 
 # インデックスを再構築
-marpkit index -d ./slides --rebuild
+marp-lens index -d ./slides --rebuild
 
 # 特定のファイルのみインデックス
-marpkit index -f ./slides/presentation.md
+marp-lens index -f ./slides/presentation.md
 ```
 
 ### スライドの検索
 
 ```bash
 # 意味検索
-marpkit search "機械学習の基礎"
+marp-lens search "機械学習の基礎"
 
 # 結果数を制限
-marpkit search "アーキテクチャ" --limit 5
+marp-lens search "アーキテクチャ" --limit 5
 
 # 類似度閾値を設定
-marpkit search "API設計" --threshold 0.7
+marp-lens search "API設計" --threshold 0.7
 
 # JSON形式で出力
-marpkit search "テスト" --format json
+marp-lens search "テスト" --format json
 ```
 
 ### 特定スライドの取得
 
 ```bash
 # ファイル名とスライド番号で取得
-marpkit get "presentation.md #3"
+marp-lens get "presentation.md #3"
 
 # パスの一部でも検索可能
-marpkit get "slides.md #10"
+marp-lens get "slides.md #10"
 ```
 
 ### 統計情報の表示
 
 ```bash
-marpkit stats
+marp-lens stats
 ```
 
 出力例:
@@ -134,18 +134,18 @@ Database Statistics
 
 ```bash
 # ファイル変更を監視して自動的に再インデックス
-marpkit watch -d ./slides
+marp-lens watch -d ./slides
 
 # 画像説明付きで監視
-marpkit watch -d ./slides --with-images
+marp-lens watch -d ./slides --with-images
 ```
 
 出力例:
 ```
-marpkit watch
+marp-lens watch
 ──────────────────────────────────────────────────
   Directory: /path/to/slides
-  Database:  /path/to/marpkit.db
+  Database:  /path/to/marp-lens.db
   Images:    No
 ──────────────────────────────────────────────────
 
@@ -158,19 +158,19 @@ Watching for changes... (Ctrl+C to stop)
 
 ## コマンドリファレンス
 
-### `marpkit index`
+### `marp-lens index`
 
 Markdownファイルをインデックスします。
 
 | オプション | 説明 | デフォルト |
 |-----------|------|-----------|
 | `-d, --dir <path>` | 検索対象ディレクトリ | カレントディレクトリ |
-| `--db <path>` | データベースファイルパス | `./marpkit.db` |
+| `--db <path>` | データベースファイルパス | `./marp-lens.db` |
 | `-f, --file <path>` | 特定ファイルのみインデックス | - |
 | `-r, --rebuild` | インデックスを再構築 | `false` |
 | `-i, --with-images` | 画像説明を含める | `false` |
 
-### `marpkit search <query>`
+### `marp-lens search <query>`
 
 スライドを意味検索します。
 
@@ -179,26 +179,26 @@ Markdownファイルをインデックスします。
 | `-l, --limit <number>` | 最大結果数 | `10` |
 | `-t, --threshold <number>` | 最小類似度閾値 (0-1) | `0` |
 | `-o, --format <format>` | 出力形式 (`table` or `json`) | `table` |
-| `--db <path>` | データベースファイルパス | `./marpkit.db` |
+| `--db <path>` | データベースファイルパス | `./marp-lens.db` |
 
-### `marpkit get <file-slide>`
+### `marp-lens get <file-slide>`
 
 特定のスライドの内容を取得します。
 
 形式: `<ファイルパス> #<スライド番号>`
 
-### `marpkit stats`
+### `marp-lens stats`
 
 データベースの統計情報を表示します。
 
-### `marpkit watch`
+### `marp-lens watch`
 
 ファイル変更を監視して自動的に再インデックスします。
 
 | オプション | 説明 | デフォルト |
 |-----------|------|-----------|
 | `-d, --dir <path>` | 監視対象ディレクトリ | カレントディレクトリ |
-| `--db <path>` | データベースファイルパス | `./marpkit.db` |
+| `--db <path>` | データベースファイルパス | `./marp-lens.db` |
 | `-i, --with-images` | 画像説明を含める | `false` |
 
 ## 環境変数
@@ -206,8 +206,8 @@ Markdownファイルをインデックスします。
 | 変数 | 説明 | 必須 |
 |------|------|------|
 | `GEMINI_API_KEY` | Gemini APIキー | Yes |
-| `MARPKIT_DB` | デフォルトのデータベースパス | No |
-| `MARPKIT_DIR` | デフォルトのスライドディレクトリ | No |
+| `MARP_LENS_DB` | デフォルトのデータベースパス | No |
+| `MARP_LENS_DIR` | デフォルトのスライドディレクトリ | No |
 
 ## 開発
 
@@ -227,13 +227,13 @@ npm run build
 
 ## AIエージェント向けスキル
 
-AIエージェントにmarpkitスキルを追加すると、プレゼンテーションの検索・参照が可能になります。
+AIエージェントにmarp-lensスキルを追加すると、プレゼンテーションの検索・参照が可能になります。
 
 ```bash
-npx skills add hirokidaichi/marpkit
+npx skills add hirokidaichi/marp-lens
 ```
 
-追加後、エージェントに「スライドを検索して」「プレゼンの内容を教えて」などと指示すると、自動的にmarpkitを使用してスライドを検索します。
+追加後、エージェントに「スライドを検索して」「プレゼンの内容を教えて」などと指示すると、自動的にmarp-lensを使用してスライドを検索します。
 
 ## 技術スタック
 
