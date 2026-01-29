@@ -119,6 +119,17 @@ export class SlideDatabase {
     this.db.prepare("DELETE FROM slides WHERE file_id = ?").run(fileId);
   }
 
+  deleteFileByPath(path: string): boolean {
+    const existing = this.getFileByPath(path);
+    if (!existing) {
+      return false;
+    }
+
+    this.deleteFileSlides(existing.id!);
+    this.db.prepare("DELETE FROM files WHERE id = ?").run(existing.id);
+    return true;
+  }
+
   insertSlide(slide: Omit<SlideRecord, "id">): number {
     const result = this.db
       .prepare(

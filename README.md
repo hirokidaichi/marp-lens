@@ -15,6 +15,7 @@ Marpプレゼンテーション用のベクトル検索CLIツール。Gemini API
 - **画像説明**: Gemini Visionによるスライド内画像の自動説明（オプション）
 - **スピーカーノート対応**: スピーカーノートも検索対象に含める
 - **高速**: SQLite + sqlite-vecによる高速ベクトル検索
+- **ウォッチモード**: ファイル変更時の自動再インデックス
 
 ## インストール
 
@@ -115,6 +116,32 @@ Database Statistics
 └─────────────────────────┴────────────────────┘
 ```
 
+### ウォッチモード（自動再インデックス）
+
+```bash
+# ファイル変更を監視して自動的に再インデックス
+marpkit watch -d ./slides
+
+# 画像説明付きで監視
+marpkit watch -d ./slides --with-images
+```
+
+出力例:
+```
+marpkit watch
+──────────────────────────────────────────────────
+  Directory: /path/to/slides
+  Database:  /path/to/marpkit.db
+  Images:    No
+──────────────────────────────────────────────────
+
+Watching for changes... (Ctrl+C to stop)
+
+15:30:45 [change] presentation.md
+  Generating embeddings for 5 slides...
+  Indexed: 5 slides
+```
+
 ## コマンドリファレンス
 
 ### `marpkit index`
@@ -149,6 +176,16 @@ Markdownファイルをインデックスします。
 ### `marpkit stats`
 
 データベースの統計情報を表示します。
+
+### `marpkit watch`
+
+ファイル変更を監視して自動的に再インデックスします。
+
+| オプション | 説明 | デフォルト |
+|-----------|------|-----------|
+| `-d, --dir <path>` | 監視対象ディレクトリ | カレントディレクトリ |
+| `--db <path>` | データベースファイルパス | `./marpkit.db` |
+| `-i, --with-images` | 画像説明を含める | `false` |
 
 ## 環境変数
 

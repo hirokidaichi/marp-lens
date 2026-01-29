@@ -69,3 +69,9 @@ export interface SearchOptions {
   format: "json" | "table";
   db: string;
 }
+
+export interface WatchOptions {
+  dir: string;
+  db: string;
+  withImages: boolean;
+}

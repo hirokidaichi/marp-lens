@@ -7,6 +7,7 @@ import { indexCommand } from "./commands/index-cmd.js";
 import { searchCommand } from "./commands/search-cmd.js";
 import { statsCommand } from "./commands/stats-cmd.js";
 import { getCommand } from "./commands/get-cmd.js";
+import { watchCommand } from "./commands/watch-cmd.js";
 
 // Load .env file
 config();
@@ -81,6 +82,28 @@ program
   .action((fileSlide, options) => {
     getCommand(fileSlide, {
       db: path.resolve(options.db),
+    });
+  });
+
+program
+  .command("watch")
+  .description("Watch for file changes and auto-reindex")
+  .option(
+    "-d, --dir <path>",
+    "Directory containing markdown files",
+    DEFAULT_DIR
+  )
+  .option("--db <path>", "Database file path", DEFAULT_DB)
+  .option(
+    "-i, --with-images",
+    "Include image descriptions using Gemini Vision",
+    false
+  )
+  .action(async (options) => {
+    await watchCommand({
+      dir: path.resolve(options.dir),
+      db: path.resolve(options.db),
+      withImages: options.withImages,
     });
   });
 
