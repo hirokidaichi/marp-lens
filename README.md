@@ -5,6 +5,7 @@
 </p>
 
 [![CI](https://github.com/hirokidaichi/marpkit/actions/workflows/ci.yml/badge.svg)](https://github.com/hirokidaichi/marpkit/actions/workflows/ci.yml)
+[![npm version](https://badge.fury.io/js/marpkit.svg)](https://www.npmjs.com/package/marpkit)
 
 Marpプレゼンテーション用のベクトル検索CLIツール。Gemini APIを使用してスライドの意味検索を実現します。
 
@@ -19,15 +20,28 @@ Marpプレゼンテーション用のベクトル検索CLIツール。Gemini API
 
 ## インストール
 
+### npxで直接実行（推奨）
+
+インストール不要で直接実行できます：
+
 ```bash
-# リポジトリをクローン
+npx marpkit search "機械学習"
+npx marpkit index -d ./slides
+npx marpkit stats
+```
+
+### グローバルインストール
+
+```bash
+npm install -g marpkit
+```
+
+### ソースからビルド
+
+```bash
 git clone https://github.com/hirokidaichi/marpkit.git
 cd marpkit
-
-# 依存関係をインストール
 npm install
-
-# ビルド
 npm run build
 ```
 
@@ -210,6 +224,17 @@ npm test
 # ビルド
 npm run build
 ```
+
+## Claude Code スキル
+
+Claude Codeでmarpkitスキルを使用すると、AIがプレゼンテーションを検索・参照できるようになります。
+
+```bash
+# スキルを追加
+npx @anthropic-ai/claude-code skills add hirokidaichi/marpkit
+```
+
+追加後、Claudeに「スライドを検索して」「プレゼンの内容を教えて」などと指示すると、自動的にmarpkitを使用してスライドを検索します。
 
 ## 技術スタック
 
