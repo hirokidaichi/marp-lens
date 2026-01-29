@@ -1,7 +1,7 @@
 # marp-lens
 
 <p align="center">
-  <img src="img/logo.png" alt="marp-lens logo" width="200">
+  <img src="img/logo.png" alt="marp-lens logo" width="400">
 </p>
 
 [![CI](https://github.com/hirokidaichi/marp-lens/actions/workflows/ci.yml/badge.svg)](https://github.com/hirokidaichi/marp-lens/actions/workflows/ci.yml)
