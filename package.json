@@ -7,6 +7,31 @@
   "bin": {
     "marpkit": "dist/cli.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hirokidaichi/marpkit.git"
+  },
+  "author": "hirokidaichi",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hirokidaichi/marpkit/issues"
+  },
+  "homepage": "https://github.com/hirokidaichi/marpkit#readme",
+  "keywords": [
+    "marp",
+    "presentation",
+    "slides",
+    "search",
+    "semantic-search",
+    "vector-search",
+    "gemini",
+    "cli"
+  ],
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "build": "tsc",
     "dev": "tsx src/cli.ts",
@@ -16,7 +41,8 @@
     "get": "tsx src/cli.ts get",
     "test": "vitest",
     "test:e2e": "vitest --config vitest.config.e2e.ts --run",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
