@@ -36,7 +36,7 @@ export class GeminiClient {
 
       const response = await model.batchEmbedContents({
         requests: chunk.map((text) => ({
-          content: { parts: [{ text }] },
+          content: { role: "user", parts: [{ text }] },
         })),
       });
 
