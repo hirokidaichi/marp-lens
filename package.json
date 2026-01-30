@@ -1,6 +1,6 @@
 {
   "name": "marp-lens",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Vector-based semantic search CLI for Marp presentations",
   "type": "module",
   "main": "dist/index.js",

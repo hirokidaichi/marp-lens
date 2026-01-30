@@ -3,6 +3,8 @@
 import { program } from "commander";
 import { config } from "dotenv";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
+import fs from "node:fs";
 import { indexCommand } from "./commands/index-cmd.js";
 import { searchCommand } from "./commands/search-cmd.js";
 import { statsCommand } from "./commands/stats-cmd.js";
@@ -12,6 +14,12 @@ import { watchCommand } from "./commands/watch-cmd.js";
 // Load .env file
 config();
 
+// Get version from package.json
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const packageJson = JSON.parse(
+  fs.readFileSync(path.resolve(__dirname, "../package.json"), "utf-8")
+);
+
 const DEFAULT_DIR = process.env.MARP_LENS_DIR || process.cwd();
 const DEFAULT_DB =
   process.env.MARP_LENS_DB || path.resolve(process.cwd(), "marp-lens.db");
@@ -19,7 +27,7 @@ const DEFAULT_DB =
 program
   .name("marp-lens")
   .description("Vector-based semantic search CLI for Marp presentations")
-  .version("1.0.0");
+  .version(packageJson.version);
 
 program
   .command("index")
