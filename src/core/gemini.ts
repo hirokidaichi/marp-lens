@@ -6,8 +6,10 @@ import path from "node:path";
 const EMBEDDING_MODEL = "gemini-embedding-001";
 const VISION_MODEL = "gemini-2.0-flash";
 
-// Maximum batch size for batchEmbedContents API
-const EMBEDDING_BATCH_SIZE = 100;
+// Maximum batch size for batchEmbedContents API (API limit: 250)
+const EMBEDDING_BATCH_SIZE = 250;
+// Number of parallel batch requests (to maximize throughput within 5M tokens/min limit)
+const PARALLEL_BATCHES = 3;
 
 export class GeminiClient {
   private genAI: GoogleGenerativeAI;
@@ -30,28 +32,47 @@ export class GeminiClient {
     const results: Float32Array[] = new Array(texts.length);
     let completed = 0;
 
-    // Process in chunks using batchEmbedContents API (max 100 per request)
+    // Split texts into chunks of EMBEDDING_BATCH_SIZE (max 250 per API call)
+    const chunks: { startIndex: number; texts: string[] }[] = [];
     for (let i = 0; i < texts.length; i += EMBEDDING_BATCH_SIZE) {
-      const chunk = texts.slice(i, i + EMBEDDING_BATCH_SIZE);
-
-      const response = await model.batchEmbedContents({
-        requests: chunk.map((text) => ({
-          content: { role: "user", parts: [{ text }] },
-        })),
+      chunks.push({
+        startIndex: i,
+        texts: texts.slice(i, i + EMBEDDING_BATCH_SIZE),
       });
+    }
+
+    // Process chunks in parallel batches
+    for (let i = 0; i < chunks.length; i += PARALLEL_BATCHES) {
+      const parallelChunks = chunks.slice(i, i + PARALLEL_BATCHES);
+
+      const responses = await Promise.all(
+        parallelChunks.map((chunk) =>
+          model.batchEmbedContents({
+            requests: chunk.texts.map((text) => ({
+              content: { role: "user", parts: [{ text }] },
+            })),
+          })
+        )
+      );
 
       // Store results in correct positions
-      for (let j = 0; j < response.embeddings.length; j++) {
-        results[i + j] = new Float32Array(response.embeddings[j].values);
-        completed++;
-        if (onProgress) {
-          onProgress(completed, texts.length);
+      for (let j = 0; j < responses.length; j++) {
+        const chunk = parallelChunks[j];
+        const response = responses[j];
+        for (let k = 0; k < response.embeddings.length; k++) {
+          results[chunk.startIndex + k] = new Float32Array(
+            response.embeddings[k].values
+          );
+          completed++;
+          if (onProgress) {
+            onProgress(completed, texts.length);
+          }
         }
       }
 
-      // Small delay between chunks to avoid rate limiting
-      if (i + EMBEDDING_BATCH_SIZE < texts.length) {
-        await sleep(50);
+      // Small delay between parallel batches to avoid rate limiting
+      if (i + PARALLEL_BATCHES < chunks.length) {
+        await sleep(100);
       }
     }
 
