@@ -154,11 +154,17 @@ export class SlideDatabase {
     if (!Number.isInteger(slideId) || slideId < 0) {
       throw new Error(`Invalid slideId: ${slideId}`);
     }
+    // Convert Float32Array to Buffer for better-sqlite3 to properly bind as BLOB
+    const buffer = Buffer.from(
+      embedding.buffer,
+      embedding.byteOffset,
+      embedding.byteLength
+    );
     this.db
       .prepare(
         `INSERT INTO slide_embeddings (rowid, embedding) VALUES (${slideId}, ?)`
       )
-      .run(embedding);
+      .run(buffer);
   }
 
   insertSlideWithEmbedding(slide: SlideWithEmbedding): number {
@@ -168,7 +174,12 @@ export class SlideDatabase {
   }
 
   searchSimilar(queryEmbedding: Float32Array, limit: number): SearchResult[] {
-    const buffer = Buffer.from(queryEmbedding.buffer);
+    // Convert Float32Array to Buffer with proper offset and length
+    const buffer = Buffer.from(
+      queryEmbedding.buffer,
+      queryEmbedding.byteOffset,
+      queryEmbedding.byteLength
+    );
 
     const rows = this.db
       .prepare(
