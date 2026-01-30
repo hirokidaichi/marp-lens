@@ -9,8 +9,8 @@ import type {
   DatabaseStats,
 } from "../types/index.js";
 
-// Gemini text-embedding-004 produces 768-dimensional vectors
-const EMBEDDING_DIMENSIONS = 768;
+// Gemini gemini-embedding-001 produces 3072-dimensional vectors
+const EMBEDDING_DIMENSIONS = 3072;
 
 export class SlideDatabase {
   private db: Database.Database;

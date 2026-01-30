@@ -112,9 +112,9 @@ describe("SlideDatabase", () => {
         indexedAt: Date.now(),
       });
 
-      // Create a mock 768-dimensional embedding (Gemini uses 768)
-      const embedding = new Float32Array(768);
-      for (let i = 0; i < 768; i++) {
+      // Create a mock 3072-dimensional embedding (Gemini uses 3072)
+      const embedding = new Float32Array(3072);
+      for (let i = 0; i < 3072; i++) {
         embedding[i] = Math.random();
       }
 
@@ -203,8 +203,8 @@ describe("SlideDatabase", () => {
 
       // Insert multiple slides with embeddings
       for (let i = 0; i < 3; i++) {
-        const embedding = new Float32Array(768);
-        for (let j = 0; j < 768; j++) {
+        const embedding = new Float32Array(3072);
+        for (let j = 0; j < 3072; j++) {
           embedding[j] = i === 0 ? 0.5 : Math.random() * 0.1;
         }
 
@@ -221,8 +221,8 @@ describe("SlideDatabase", () => {
       }
 
       // Search with a query embedding similar to slide 0
-      const queryEmbedding = new Float32Array(768);
-      for (let i = 0; i < 768; i++) {
+      const queryEmbedding = new Float32Array(3072);
+      for (let i = 0; i < 3072; i++) {
         queryEmbedding[i] = 0.5;
       }
 
@@ -244,7 +244,7 @@ describe("SlideDatabase", () => {
       });
 
       for (let i = 0; i < 5; i++) {
-        const embedding = new Float32Array(768).fill(0.1);
+        const embedding = new Float32Array(3072).fill(0.1);
         db.insertSlideWithEmbedding({
           fileId,
           slideIndex: i,
@@ -275,7 +275,7 @@ describe("SlideDatabase", () => {
         indexedAt: Date.now(),
       });
 
-      const embedding = new Float32Array(768).fill(0.1);
+      const embedding = new Float32Array(3072).fill(0.1);
       db.insertSlideWithEmbedding({
         fileId,
         slideIndex: 0,

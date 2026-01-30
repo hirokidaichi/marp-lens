@@ -2,8 +2,12 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import fs from "node:fs";
 import path from "node:path";
 
-const EMBEDDING_MODEL = "text-embedding-004";
+// Latest Gemini embedding model (3072 dimensions, multilingual support)
+const EMBEDDING_MODEL = "gemini-embedding-001";
 const VISION_MODEL = "gemini-2.0-flash";
+
+// Concurrency limit for parallel embedding requests
+const EMBEDDING_CONCURRENCY = 5;
 
 export class GeminiClient {
   private genAI: GoogleGenerativeAI;
@@ -22,19 +26,39 @@ export class GeminiClient {
     texts: string[],
     onProgress?: (completed: number, total: number) => void
   ): Promise<Float32Array[]> {
-    const results: Float32Array[] = [];
+    const results: Float32Array[] = new Array(texts.length);
+    let completed = 0;
 
-    for (let i = 0; i < texts.length; i++) {
-      const embedding = await this.embed(texts[i]);
-      results.push(embedding);
+    // Process in parallel with concurrency limit
+    const processChunk = async (startIndex: number): Promise<void> => {
+      const promises: Promise<void>[] = [];
 
-      if (onProgress) {
-        onProgress(i + 1, texts.length);
+      for (
+        let i = startIndex;
+        i < Math.min(startIndex + EMBEDDING_CONCURRENCY, texts.length);
+        i++
+      ) {
+        const index = i;
+        promises.push(
+          this.embed(texts[index]).then((embedding) => {
+            results[index] = embedding;
+            completed++;
+            if (onProgress) {
+              onProgress(completed, texts.length);
+            }
+          })
+        );
       }
 
-      // Rate limiting between requests
-      if (i + 1 < texts.length) {
-        await sleep(100);
+      await Promise.all(promises);
+    };
+
+    // Process all chunks
+    for (let i = 0; i < texts.length; i += EMBEDDING_CONCURRENCY) {
+      await processChunk(i);
+      // Small delay between chunks to avoid rate limiting
+      if (i + EMBEDDING_CONCURRENCY < texts.length) {
+        await sleep(50);
       }
     }
 

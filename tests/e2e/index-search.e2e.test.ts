@@ -342,4 +342,105 @@ describe("E2E: Index and Search", () => {
       expect(testRelatedResult).toBeDefined();
     });
   });
+
+  describe("Embedding Quality Validation", () => {
+    it("should return different top results for different domain queries", async () => {
+      // Test that different queries return different top results
+      const queries = [
+        { query: "認証とセキュリティ OAuth JWT", expectedFile: "security" },
+        { query: "機械学習 ニューラルネットワーク", expectedFile: "ai-introduction" },
+        { query: "AWS Azure GCP サーバーレス Lambda", expectedFile: "cloud" },
+        { query: "スクラム アジャイル スプリント", expectedFile: "agile" },
+      ];
+
+      const topResults: string[] = [];
+
+      for (const { query, expectedFile } of queries) {
+        const embedding = await gemini.embed(query);
+        const results = db.searchSimilar(embedding, 3);
+
+        expect(results.length).toBeGreaterThan(0);
+
+        // Record top result
+        topResults.push(results[0].filePath);
+
+        // Verify top result matches expected domain
+        expect(results[0].filePath).toContain(expectedFile);
+      }
+
+      // Verify that we got different top results for different queries
+      const uniqueTopResults = new Set(topResults);
+      expect(uniqueTopResults.size).toBe(queries.length);
+    });
+
+    it("should show meaningful similarity score differences", async () => {
+      // Search for a specific topic and verify score distribution
+      const embedding = await gemini.embed("暗号化 AES RSA ハッシュ関数");
+      const results = db.searchSimilar(embedding, 10);
+
+      expect(results.length).toBeGreaterThan(3);
+
+      // Top result should be from security
+      expect(results[0].filePath).toContain("security");
+
+      // There should be a meaningful gap between relevant and less relevant results
+      const relevantResults = results.filter((r) =>
+        r.filePath.includes("security")
+      );
+      const otherResults = results.filter(
+        (r) => !r.filePath.includes("security")
+      );
+
+      if (relevantResults.length > 0 && otherResults.length > 0) {
+        const avgRelevant =
+          relevantResults.reduce((sum, r) => sum + r.similarity, 0) /
+          relevantResults.length;
+        const avgOther =
+          otherResults.reduce((sum, r) => sum + r.similarity, 0) /
+          otherResults.length;
+
+        // Relevant results should have higher average similarity
+        expect(avgRelevant).toBeGreaterThan(avgOther);
+      }
+    });
+
+    it("should not return identical embeddings for different content", async () => {
+      // This test specifically catches the bug where Japanese text produced identical embeddings
+      const queries = [
+        "セキュリティの基礎",
+        "データサイエンス入門",
+        "クラウドコンピューティング",
+      ];
+
+      const embeddings: Float32Array[] = [];
+      for (const query of queries) {
+        const emb = await gemini.embed(query);
+        embeddings.push(emb);
+      }
+
+      // Verify that embeddings are different
+      for (let i = 0; i < embeddings.length; i++) {
+        for (let j = i + 1; j < embeddings.length; j++) {
+          // Check first few values - they should NOT be identical
+          const areIdentical =
+            embeddings[i][0] === embeddings[j][0] &&
+            embeddings[i][1] === embeddings[j][1] &&
+            embeddings[i][2] === embeddings[j][2];
+
+          expect(areIdentical).toBe(false);
+        }
+      }
+    });
+
+    it("should return top result with similarity > 0.5 for direct keyword matches", async () => {
+      // When searching for exact content, similarity should be reasonably high
+      const embedding = await gemini.embed("マイクロサービスアーキテクチャ 独立したサービス");
+      const results = db.searchSimilar(embedding, 3);
+
+      expect(results.length).toBeGreaterThan(0);
+      expect(results[0].similarity).toBeGreaterThan(0.5);
+      // Top results should be from software-architecture.md
+      expect(results[0].filePath).toContain("software-architecture");
+    });
+  });
 });
