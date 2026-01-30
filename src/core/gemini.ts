@@ -6,8 +6,8 @@ import path from "node:path";
 const EMBEDDING_MODEL = "gemini-embedding-001";
 const VISION_MODEL = "gemini-2.0-flash";
 
-// Concurrency limit for parallel embedding requests
-const EMBEDDING_CONCURRENCY = 5;
+// Maximum batch size for batchEmbedContents API
+const EMBEDDING_BATCH_SIZE = 100;
 
 export class GeminiClient {
   private genAI: GoogleGenerativeAI;
@@ -26,38 +26,31 @@ export class GeminiClient {
     texts: string[],
     onProgress?: (completed: number, total: number) => void
   ): Promise<Float32Array[]> {
+    const model = this.genAI.getGenerativeModel({ model: EMBEDDING_MODEL });
     const results: Float32Array[] = new Array(texts.length);
     let completed = 0;
 
-    // Process in parallel with concurrency limit
-    const processChunk = async (startIndex: number): Promise<void> => {
-      const promises: Promise<void>[] = [];
+    // Process in chunks using batchEmbedContents API (max 100 per request)
+    for (let i = 0; i < texts.length; i += EMBEDDING_BATCH_SIZE) {
+      const chunk = texts.slice(i, i + EMBEDDING_BATCH_SIZE);
 
-      for (
-        let i = startIndex;
-        i < Math.min(startIndex + EMBEDDING_CONCURRENCY, texts.length);
-        i++
-      ) {
-        const index = i;
-        promises.push(
-          this.embed(texts[index]).then((embedding) => {
-            results[index] = embedding;
-            completed++;
-            if (onProgress) {
-              onProgress(completed, texts.length);
-            }
-          })
-        );
+      const response = await model.batchEmbedContents({
+        requests: chunk.map((text) => ({
+          content: { parts: [{ text }] },
+        })),
+      });
+
+      // Store results in correct positions
+      for (let j = 0; j < response.embeddings.length; j++) {
+        results[i + j] = new Float32Array(response.embeddings[j].values);
+        completed++;
+        if (onProgress) {
+          onProgress(completed, texts.length);
+        }
       }
 
-      await Promise.all(promises);
-    };
-
-    // Process all chunks
-    for (let i = 0; i < texts.length; i += EMBEDDING_CONCURRENCY) {
-      await processChunk(i);
       // Small delay between chunks to avoid rate limiting
-      if (i + EMBEDDING_CONCURRENCY < texts.length) {
+      if (i + EMBEDDING_BATCH_SIZE < texts.length) {
         await sleep(50);
       }
     }
